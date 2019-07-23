@@ -19,7 +19,7 @@ import org.springframework.web.bind.annotation.RestController;
 
 import com.eksad.miniproject.DAO.ProvinceDAO;
 import com.eksad.miniproject.exception.DataNotFoundException;
-import com.eksad.miniproject.repository.ProvinceRepository;
+import com.eksad.miniproject.model.Province;
 
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
@@ -30,14 +30,14 @@ import io.swagger.annotations.ApiOperation;
 public class ProvinceController {
 
 	@Autowired
-	private ProvinceRepository provinceRepository;
+	private ProvinceDAO provinceRepository;
 
 	@ApiOperation(value = "API to retrieve all Province's data", 
 			notes = "return All 's data with 3SON Format", 
 			tags = "Get Data API")
 
 	@GetMapping("/provinces")
-	public List<ProvinceDAO> getAllProvinceDAOs() {
+	public List<Province> getAllProvinceDAOs() {
 		return provinceRepository.findAll();
 	}
 
@@ -46,10 +46,10 @@ public class ProvinceController {
 			tags = "Get Data API")
 
 	@GetMapping("province/{id}")
-	public ResponseEntity<ProvinceDAO> GetProvinceById(@PathVariable(value = "id") Long provinceId)
+	public ResponseEntity<Province> GetProvinceById(@PathVariable(value = "id") Long provinceId)
 			throws DataNotFoundException {
 
-		ProvinceDAO province = provinceRepository.findById(provinceId)
+		Province province = provinceRepository.findById(provinceId)
 				.orElseThrow(() -> new DataNotFoundException("Province not found for this id :  " + provinceId));
 
 		return ResponseEntity.ok().body(province);
@@ -60,41 +60,43 @@ public class ProvinceController {
 			tags = "Get Data API")
 
 	@GetMapping("/province/{name}/{id}")
-	public ResponseEntity<List<ProvinceDAO>> GetProvinceByName(
-			@PathVariable(value = "Province Name") String provinceName, @PathVariable(value = "id") String id) {
+	public ResponseEntity<List<Province>> GetProvinceByName(
+			@PathVariable(value = "Province Name") String provinceName, @PathVariable(value = "id") Long id) {
 
-		ProvinceDAO province = new ProvinceDAO();
+		Province province = new Province();
 
 		province.setProvinceName(provinceName);
-		province.setProvinceName(id);
+		province.setId(id);
 
-		Example<ProvinceDAO> provinceExample = Example.of(province);
+		Example<Province> provinceExample = Example.of(province);
 
-		List<ProvinceDAO> provinceReturn = provinceRepository.findAll(provinceExample);
+		List<Province> provinceReturn = provinceRepository.findAll(provinceExample);
 
 		return ResponseEntity.ok().body(provinceReturn);
 	}
 
-	@ApiOperation(value = "save new Province data", notes = "save new Province data to database", tags = "Data Manipulation API")
+	@ApiOperation(value = "save new Province data", 
+		notes = "save new Province data to database", 
+			tags = "Data Manipulation API")
 
-	@PostMapping("/province")
-	public ProvinceDAO InsertProvince(@Valid @RequestBody ProvinceDAO province) {
+@PostMapping("/province")
+	public Province InsertProvince(@Valid @RequestBody Province province) {
 		return provinceRepository.save(province);
 	}
 
 	@ApiOperation(value = "Update new Province data", notes = "Update new Province data to database", tags = "Data Manipulation API")
 
 	@PutMapping("/province/{id}")
-	public ResponseEntity<ProvinceDAO> UpdateProvince(@Valid @RequestBody ProvinceDAO provinceRequest,
+	public ResponseEntity<Province> UpdateProvince(@Valid @RequestBody Province provinceRequest,
 			@PathVariable(value = "id") Long provinceId) throws DataNotFoundException {
 
-		ProvinceDAO province = provinceRepository.findById(provinceId)
-				.orElseThrow(() -> new DataNotFoundException("Province not found for this id :: " + provinceId));
+		Province province = provinceRepository.findById(provinceId)
+				.orElseThrow(() -> new DataNotFoundException("Province not found for this id : " + provinceId));
 
 		province.setProvinceName(provinceRequest.getProvinceName());
 		province.setId(provinceRequest.getId());
 
-		final ProvinceDAO updateProvince = provinceRepository.save(province);
+		final Province updateProvince = provinceRepository.save(province);
 
 		return ResponseEntity.ok().body(updateProvince);
 	}
@@ -104,7 +106,7 @@ public class ProvinceController {
 	@DeleteMapping("/province/{id}")
 	public Map<String, Boolean> deleteProvince(@PathVariable(value = "id") Long provinceId)
 			throws DataNotFoundException {
-		ProvinceDAO province = provinceRepository.findById(provinceId)
+		Province province = provinceRepository.findById(provinceId)
 				.orElseThrow(() -> new DataNotFoundException("Province not found for this id :: " + provinceId));
 
 		provinceRepository.delete(province);

@@ -7,7 +7,6 @@ import java.util.Map;
 import javax.validation.Valid;
 
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.data.domain.Example;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -20,7 +19,7 @@ import org.springframework.web.bind.annotation.RestController;
 
 import com.eksad.miniproject.DAO.CityDAO;
 import com.eksad.miniproject.exception.DataNotFoundException;
-import com.eksad.miniproject.repository.CityRepository;
+import com.eksad.miniproject.model.City;
 
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
@@ -31,14 +30,14 @@ import io.swagger.annotations.ApiOperation;
 public class CityController {
 
 	@Autowired
-	private CityRepository cityRepository;
+	private CityDAO cityRepository;
 
 	@ApiOperation(value = "API to retrieve all City's data", 
 			notes = "return All 's data with 3SON Format", 
 			tags = "Get Data API")
 
-	@GetMapping("/cities")
-	public List<CityDAO> getAllCityDAOs() {
+	@GetMapping(value = "/cities")
+	public List<City> getAllCityDAOs() {
 		return cityRepository.findAll();
 	}
 
@@ -46,10 +45,10 @@ public class CityController {
 			notes = "return All City's data with 3SON Format", 
 			tags = "Get Data API")
 
-	@GetMapping("/city/{id}")
-	public ResponseEntity<CityDAO> GetCityById(@PathVariable(value = "id") Long cityId) throws DataNotFoundException {
+	@GetMapping(value= "/idCity/{id}")
+	public ResponseEntity<City> GetCityById(@PathVariable(value = "id") Long cityId) throws DataNotFoundException {
 
-		CityDAO city = cityRepository.findById(cityId)
+		City city = cityRepository.findById(cityId)
 				.orElseThrow(() -> new DataNotFoundException("City not found for this id :: " + cityId));
 
 		return ResponseEntity.ok().body(city);
@@ -59,58 +58,49 @@ public class CityController {
 			notes = "return All city's data with 3SON Format", 
 			tags = "Get Data API")
 
-	@GetMapping("/city/{name}/{id}")
-	public ResponseEntity<List<CityDAO>> GetCityByName(@PathVariable(value = "City Name") String cityName,
-			@PathVariable(value = "id") String id) {
-
-		CityDAO city = new CityDAO();
-
-		city.setCityName(cityName);
-		city.setCityName(id);
-
-		Example<CityDAO> cityExample = Example.of(city);
-
-		List<CityDAO> cityReturn = cityRepository.findAll(cityExample);
-
+	@GetMapping(value= "/nameCity/{name}")
+	public ResponseEntity<City> GetCityByName(@PathVariable(value = "name") String cityName){
+		City cityReturn = cityRepository.findByCityName(cityName);
 		return ResponseEntity.ok().body(cityReturn);
 	}
 
 	@ApiOperation(value = "save new City data", 
 			notes = "save new City data to database", 
-			tags = "Data Manipulation API")
+		tags = "Data Manipulation API")
 
-	@PostMapping("/City")
-	public CityDAO InsertCity(@Valid @RequestBody CityDAO city) {
+	@PostMapping(value = "/addCity")
+	public City InsertCity(@Valid @RequestBody City city) {
 		return cityRepository.save(city);
 	}
 
-	@ApiOperation(value = "Update new City data", notes = "Update new City data to database", tags = "Data Manipulation API")
+	@ApiOperation(value = "Update new City data", 
+			notes = "Update new City data to database", 
+			tags = "Data Manipulation API")
 
-	@PutMapping("/City/{id}")
-	public ResponseEntity<CityDAO> UpdateCity(@Valid @RequestBody CityDAO cityRequest,
+	@PutMapping(value= "/updateCity/{id}")
+	public ResponseEntity<City> updateCity(@Valid @RequestBody City Update,
 			@PathVariable(value = "id") Long cityId) throws DataNotFoundException {
 
-		CityDAO city = cityRepository.findById(cityId)
+		City city = cityRepository.findById(cityId)
 				.orElseThrow(() -> new DataNotFoundException("City not found for this id :: " + cityId));
 
-		city.setCityName(cityRequest.getCityName());
-		city.setId(cityRequest.getId());
+		city.setCityName(Update.getCityName());
+		city.setId(Update.getId());
 
-		final CityDAO updateCity = cityRepository.save(city);
-
+		final City updateCity = cityRepository.save(city);
 		return ResponseEntity.ok().body(updateCity);
 	}
 
 	@ApiOperation(value = "Delete new City data", notes = "Delete new City data to database", tags = "Data Manipulation API")
 
-	@DeleteMapping("/city/{id}")
+	@DeleteMapping("/deleteCity/{id}")
 	public Map<String, Boolean> deleteCity(@PathVariable(value = "id") Long cityId) throws DataNotFoundException {
-		CityDAO city = cityRepository.findById(cityId)
+		City city = cityRepository.findById(cityId)
 				.orElseThrow(() -> new DataNotFoundException("Province not found for this id :: " + cityId));
 
 		cityRepository.delete(city);
 		Map<String, Boolean> response = new HashMap<>();
-		response.put("deleted", Boolean.TRUE);
+		response.put("Data dihapus", Boolean.TRUE);
 		return response;
 	}
 
