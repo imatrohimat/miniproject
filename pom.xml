@@ -10,10 +10,10 @@ xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
 		<relativePath/> <!-- lookup parent from repository -->
 	</parent>
 	<groupId>com.eksad.miniproject</groupId>
-	<artifactId>Province</artifactId>
+	<artifactId>miniproject</artifactId>
 	<version>0.0.1-SNAPSHOT</version>
-	<name>Province</name>
-	<description>NES Province</description>
+	<name>miniproject</name>
+	<description>National Enterprise Structure (NES)</description>
 
 	<properties>
 		<java.version>1.8</java.version>

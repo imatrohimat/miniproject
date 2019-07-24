@@ -18,21 +18,22 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.eksad.miniproject.DAO.CityDAO;
+import com.eksad.miniproject.entity.City;
 import com.eksad.miniproject.exception.DataNotFoundException;
-import com.eksad.miniproject.model.City;
 
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 
 @RestController
 @RequestMapping("/nes")
-@Api(tags = "cities")
-public class CityController {
-
+@Api(tags ="Cities")
+public class CityCrud {
+	
 	@Autowired
 	private CityDAO cityRepository;
+	
 
-	@ApiOperation(value = "API to retrieve all City's data", 
+	@ApiOperation(value = "API to retrieve cities data", 
 			notes = "return All 's data with 3SON Format", 
 			tags = "Get Data API")
 
@@ -41,22 +42,15 @@ public class CityController {
 		return cityRepository.findAll();
 	}
 
-	@ApiOperation(value = "API to retrieve all City's data by id", 
-			notes = "return All City's data with 3SON Format", 
-			tags = "Get Data API")
 
 	@GetMapping(value= "/idCity/{id}")
 	public ResponseEntity<City> GetCityById(@PathVariable(value = "id") Long cityId) throws DataNotFoundException {
 
 		City city = cityRepository.findById(cityId)
 				.orElseThrow(() -> new DataNotFoundException("City not found for this id :: " + cityId));
-
 		return ResponseEntity.ok().body(city);
 	}
 
-	@ApiOperation(value = "API to retrieve all City's data by id", 
-			notes = "return All city's data with 3SON Format", 
-			tags = "Get Data API")
 
 	@GetMapping(value= "/nameCity/{name}")
 	public ResponseEntity<City> GetCityByName(@PathVariable(value = "name") String cityName){
@@ -72,7 +66,7 @@ public class CityController {
 	public City InsertCity(@Valid @RequestBody City city) {
 		return cityRepository.save(city);
 	}
-
+	
 	@ApiOperation(value = "Update new City data", 
 			notes = "Update new City data to database", 
 			tags = "Data Manipulation API")
@@ -91,7 +85,10 @@ public class CityController {
 		return ResponseEntity.ok().body(updateCity);
 	}
 
-	@ApiOperation(value = "Delete new City data", notes = "Delete new City data to database", tags = "Data Manipulation API")
+	
+	@ApiOperation(value = "Delete new City data", 
+			notes = "Delete new City data to database", 
+			tags = "Data Manipulation API")
 
 	@DeleteMapping("/deleteCity/{id}")
 	public Map<String, Boolean> deleteCity(@PathVariable(value = "id") Long cityId) throws DataNotFoundException {
@@ -103,5 +100,6 @@ public class CityController {
 		response.put("Data dihapus", Boolean.TRUE);
 		return response;
 	}
-
+	
+	
 }
