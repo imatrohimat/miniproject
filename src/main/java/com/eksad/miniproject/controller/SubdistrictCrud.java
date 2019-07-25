@@ -25,7 +25,7 @@ import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 
 @RestController
-@RequestMapping("/nes")
+@RequestMapping("/api/v1")
 @Api(tags ="Subdistricts")
 public class SubdistrictCrud {
 
@@ -42,7 +42,7 @@ public class SubdistrictCrud {
 		return subRepository.findAll();
 	}
 	
-	@GetMapping(value= "/idSub/{id}")
+	@GetMapping(value= "/idSubdistrict/{id}")
 	public ResponseEntity<Subdistrict> GetSubById(@PathVariable(value = "id") Long subId) throws DataNotFoundException {
 
 		 Subdistrict sub = subRepository.findById(subId)
@@ -52,14 +52,14 @@ public class SubdistrictCrud {
 	}
 
 
-	@GetMapping(value= "/nameSub/{name}")
+	@GetMapping(value= "/nameSubdistrict/{name}")
 	public ResponseEntity<Subdistrict> GetSubByName(@PathVariable(value = "name") String subName){
 		Subdistrict subReturn = subRepository.findBySubName(subName);
 		return ResponseEntity.ok().body(subReturn);
 	}
 	
 	
-	@ApiOperation(value = "save new City data", 
+	@ApiOperation(value = "save new Subdistrict data", 
 			notes = "save new City data to database", 
 		tags = "Data Manipulation API")
 
@@ -70,13 +70,13 @@ public class SubdistrictCrud {
 	}
 	
 	
-	@ApiOperation(value = "Update new City data", 
+	@ApiOperation(value = "Update new Subdistrict data", 
 			notes = "Update new City data to database", 
 			tags = "Data Manipulation API")
 
 
 	
-	@PutMapping(value= "/updateSub/{id}")
+	@PutMapping(value= "/updateSubdistrict/{id}")
 	public ResponseEntity<Subdistrict> updateSub(@Valid @RequestBody Subdistrict Update,
 			@PathVariable(value = "id") Long subId) throws DataNotFoundException {
 
@@ -92,12 +92,12 @@ public class SubdistrictCrud {
 	
 	
 	
-	@ApiOperation(value = "Delete new City data", 
+	@ApiOperation(value = "Delete new Subdistrict data", 
 			notes = "Delete new City data to database", 
 			tags = "Data Manipulation API")
 
 	
-	@DeleteMapping("/deleteSub/{id}")
+	@DeleteMapping("/deleteSubdistrict/{id}")
 	public Map<String, Boolean> deleteSub(@PathVariable(value = "id") Long subId) throws DataNotFoundException {
 		Subdistrict sub = subRepository.findById(subId)
 				.orElseThrow(() -> new DataNotFoundException("Province not found for this id :: " + subId));

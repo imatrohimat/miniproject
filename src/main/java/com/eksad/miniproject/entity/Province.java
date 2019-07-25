@@ -23,7 +23,7 @@ public class Province {
 	@GeneratedValue(strategy = GenerationType.IDENTITY) // autoincrement
 	private long id;
 	@Column(nullable = false) // not null
+	
 	private String province_name;
-
 	
 }

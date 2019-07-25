@@ -7,6 +7,7 @@ import com.eksad.miniproject.entity.Province;
 
 @Repository
 public interface ProvinceDAO extends JpaRepository<Province, Long> {
+
 }
 
 

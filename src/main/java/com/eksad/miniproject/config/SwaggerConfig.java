@@ -28,10 +28,11 @@ public class SwaggerConfig {
 				.paths(regex("/api.*"))//scaning path dengan prefix '/api'
 				.build()
 				.apiInfo(metaInfo()) //Assign metaInfo
-				.tags(new Tag ("Cities", "Cities Manajement API"),
-						new Tag ("Subdistricts", "Subdistrict Manajament API"),
-						new Tag ("Get Data API", "GetById, GetByName, GetAll"),
-						new Tag ("Data Manipulation API","Save, Update, Delete")
+				.tags(new Tag ("Provinces", "Province Manajement API"),
+						new Tag ("Cities", "Cities Manajament API"),
+						new Tag ("Subdistricts", "Subdistricts Manajament API"),
+						new Tag ("Get Data API", "Get Methods in All level"),
+						new Tag ("Data Manipulation API"," All Manipulation in All level")
 						);
 	}
 	
